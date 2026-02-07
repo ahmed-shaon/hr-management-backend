@@ -90,6 +90,19 @@ export interface AttendanceListQuery {
   limit?: number;
 }
 
+// --- Reports ---
+export interface AttendanceReportQuery {
+  month: string;
+  employee_id?: number;
+}
+
+export interface AttendanceReportRow {
+  employee_id: number;
+  name: string;
+  days_present: number;
+  times_late: number;
+}
+
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;

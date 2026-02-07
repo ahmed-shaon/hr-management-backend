@@ -33,6 +33,11 @@ import {
   validateCreateAttendance,
   createAttendanceValidationRules,
 } from '../middleware/validateCreateAttendance';
+import * as reportController from '../controller/report.controller';
+import {
+  validateReportAttendance,
+  reportAttendanceValidationRules,
+} from '../middleware/validateReportAttendance';
 
 const router = Router();
 
@@ -115,6 +120,13 @@ router.delete(
   attendanceController.remove
 );
 
-//report routes
+// report routes
+router.get(
+  '/reports/attendance',
+  authJwt,
+  reportAttendanceValidationRules,
+  validateReportAttendance,
+  reportController.getAttendanceReport
+);
 
 export default router;
