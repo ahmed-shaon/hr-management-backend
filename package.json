@@ -15,7 +15,9 @@
     "migrate:rollback": "node -r ts-node/register ./node_modules/knex/bin/cli.js migrate:rollback",
     "fix:migration-names": "node scripts/fix-migration-names.js",
     "seed": "node ./node_modules/knex/bin/cli.js seed:run",
-    "seed:employees": "node ./node_modules/knex/bin/cli.js seed:run --specific=02_employees.js"
+    "seed:hr_user": "node ./node_modules/knex/bin/cli.js seed:run --specific=01_hr_user.js",
+    "seed:employees": "node ./node_modules/knex/bin/cli.js seed:run --specific=02_employees.js",
+    "seed:attendance": "node ./node_modules/knex/bin/cli.js seed:run --specific=03_attendance.js"
   },
   "repository": {
     "type": "git",
