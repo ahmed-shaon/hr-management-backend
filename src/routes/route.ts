@@ -1,14 +1,16 @@
-import type { Request, Response } from 'express';
 import { Router } from 'express';
+import * as hrController from '../controller/hr.controller';
 
 const router = Router();
 
-router.get('/', (_req: Request, res: Response): void => {
-  res.json({ message: 'HR Management API', status: 'ok' });
-});
+//hr routes
+router.post('/auth/login', hrController.hrLogin);
 
-router.get('/health', (_req: Request, res: Response): void => {
-  res.json({ status: 'ok' });
-});
+//employee routes
+
+//attendance routes
+
+
+//report routes
 
 export default router;
