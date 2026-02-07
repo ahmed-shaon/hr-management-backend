@@ -11,6 +11,15 @@ import {
   validateEmployeeId,
   employeeIdValidationRules,
 } from '../middleware/validateEmployeeId';
+import { uploadEmployeePhoto } from '../middleware/uploadEmployeePhoto';
+import {
+  validateCreateEmployee,
+  createEmployeeValidationRules,
+} from '../middleware/validateCreateEmployee';
+import {
+  validateUpdateEmployee,
+  updateEmployeeValidationRules,
+} from '../middleware/validateUpdateEmployee';
 
 const router = Router();
 
@@ -30,12 +39,37 @@ router.get(
   validateListEmployees,
   employeeController.list
 );
+router.post(
+  '/employees',
+  authJwt,
+  uploadEmployeePhoto,
+  createEmployeeValidationRules,
+  validateCreateEmployee,
+  employeeController.create
+);
 router.get(
   '/employees/:id',
   authJwt,
   employeeIdValidationRules,
   validateEmployeeId,
   employeeController.getById
+);
+router.put(
+  '/employees/:id',
+  authJwt,
+  employeeIdValidationRules,
+  validateEmployeeId,
+  uploadEmployeePhoto,
+  updateEmployeeValidationRules,
+  validateUpdateEmployee,
+  employeeController.update
+);
+router.delete(
+  '/employees/:id',
+  authJwt,
+  employeeIdValidationRules,
+  validateEmployeeId,
+  employeeController.remove
 );
 
 // attendance routes

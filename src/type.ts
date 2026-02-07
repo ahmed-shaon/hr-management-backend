@@ -43,6 +43,24 @@ export interface Employee {
   deleted_at: Date | null;
 }
 
+export interface CreateEmployeeBody {
+  name: string;
+  age: number;
+  designation: string;
+  hiring_date: string;
+  date_of_birth: string;
+  salary: string;
+}
+
+export interface UpdateEmployeeBody {
+  name: string;
+  age: number;
+  designation: string;
+  hiring_date: string;
+  date_of_birth: string;
+  salary: string;
+}
+
 export interface EmployeeListQuery {
   search?: string;
   page?: number;
@@ -56,11 +74,22 @@ export interface PaginatedResponse<T> {
   limit: number;
 }
 
-// --- Express Request with HR user (set by authJwt middleware) ---
+// --- Upload file (set by Multer middleware) ---
+export interface MulterUploadFile {
+  fieldname: string;
+  originalname: string;
+  filename: string;
+  path: string;
+  size: number;
+  mimetype: string;
+}
+
+// --- Express Request with HR user and optional file ---
 declare global {
   namespace Express {
     interface Request {
       hrUser?: { id: number; email: string };
+      file?: MulterUploadFile;
     }
   }
 }

@@ -41,4 +41,45 @@ export const employeeModel = {
       .first();
     return row as Employee | undefined;
   },
+  /** Create employee. Returns created row. */
+  async create(data: {
+    name: string;
+    age: number;
+    designation: string;
+    hiring_date: string;
+    date_of_birth: string;
+    salary: number | string;
+    photo_path: string | null;
+  }): Promise<Employee> {
+    const [row] = await db('employees').insert(data).returning('*');
+    return row as Employee;
+  },
+  /** Update employee by id. Returns updated row or undefined if not found. */
+  async update(
+    id: number,
+    data: {
+      name: string;
+      age: number;
+      designation: string;
+      hiring_date: string;
+      date_of_birth: string;
+      salary: number | string;
+      photo_path?: string | null;
+    }
+  ): Promise<Employee | undefined> {
+    const [row] = await db('employees')
+      .where({ id })
+      .whereNull('deleted_at')
+      .update(data)
+      .returning('*');
+    return row as Employee | undefined;
+  },
+  /** Soft-delete employee by id. Returns true if a row was updated. */
+  async softDelete(id: number): Promise<boolean> {
+    const updated = await db('employees')
+      .where({ id })
+      .whereNull('deleted_at')
+      .update({ deleted_at: db.fn.now() });
+    return Number(updated) > 0;
+  },
 };
