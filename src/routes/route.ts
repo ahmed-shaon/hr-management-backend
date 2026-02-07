@@ -29,6 +29,10 @@ import {
   validateAttendanceId,
   attendanceIdValidationRules,
 } from '../middleware/validateAttendanceId';
+import {
+  validateCreateAttendance,
+  createAttendanceValidationRules,
+} from '../middleware/validateCreateAttendance';
 
 const router = Router();
 
@@ -89,12 +93,26 @@ router.get(
   validateListAttendance,
   attendanceController.list
 );
+router.post(
+  '/attendance',
+  authJwt,
+  createAttendanceValidationRules,
+  validateCreateAttendance,
+  attendanceController.create
+);
 router.get(
   '/attendance/:id',
   authJwt,
   attendanceIdValidationRules,
   validateAttendanceId,
   attendanceController.getById
+);
+router.delete(
+  '/attendance/:id',
+  authJwt,
+  attendanceIdValidationRules,
+  validateAttendanceId,
+  attendanceController.remove
 );
 
 //report routes

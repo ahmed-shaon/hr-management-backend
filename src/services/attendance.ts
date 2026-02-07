@@ -1,6 +1,11 @@
 // Attendance business logic. List with filters and pagination.
 
-import type { Attendance, AttendanceListQuery, PaginatedResponse } from '../type';
+import type {
+  Attendance,
+  AttendanceListQuery,
+  CreateAttendanceBody,
+  PaginatedResponse,
+} from '../type';
 import { attendanceModel } from '../models/attendance';
 
 const DEFAULT_PAGE = 1;
@@ -35,5 +40,13 @@ export const attendanceService = {
   async getAttendanceById(id: number): Promise<Attendance | null> {
     const row = await attendanceModel.findById(id);
     return row ?? null;
+  },
+  /** Create or upsert attendance. If (employee_id, date) exists, updates check_in_time. */
+  async createOrUpdateAttendance(body: CreateAttendanceBody): Promise<Attendance> {
+    return attendanceModel.upsert(body);
+  },
+  /** Delete attendance by id. Returns true if deleted, false if not found. */
+  async deleteAttendance(id: number): Promise<boolean> {
+    return attendanceModel.deleteById(id);
   },
 };

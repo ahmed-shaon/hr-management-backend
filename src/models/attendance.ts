@@ -46,4 +46,26 @@ export const attendanceModel = {
     const row = await db('attendance').where({ id }).first();
     return row as Attendance | undefined;
   },
+  /** Create or update attendance by (employee_id, date). On conflict updates check_in_time. Returns the row. */
+  async upsert(data: {
+    employee_id: number;
+    date: string;
+    check_in_time: string;
+  }): Promise<Attendance> {
+    const [row] = await db('attendance')
+      .insert({
+        employee_id: data.employee_id,
+        date: data.date,
+        check_in_time: data.check_in_time,
+      })
+      .onConflict(['employee_id', 'date'])
+      .merge(['check_in_time'])
+      .returning('*');
+    return row as Attendance;
+  },
+  /** Delete attendance by id. Returns true if a row was deleted. */
+  async deleteById(id: number): Promise<boolean> {
+    const deleted = await db('attendance').where({ id }).del();
+    return Number(deleted) > 0;
+  },
 };

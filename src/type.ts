@@ -76,6 +76,12 @@ export interface Attendance {
   created_at: Date;
 }
 
+export interface CreateAttendanceBody {
+  employee_id: number;
+  date: string;
+  check_in_time: string;
+}
+
 export interface AttendanceListQuery {
   employee_id?: number;
   from?: string;
