@@ -1,4 +1,5 @@
 import 'dotenv/config';
+// Express app: JSON, routes, global error handler. DB check on startup.
 import express from 'express';
 import routes from './routes/route';
 import { errorHandler } from './middleware/errorHandler';

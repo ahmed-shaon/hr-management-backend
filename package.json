@@ -11,8 +11,9 @@
     "lint:fix": "eslint \"src/**/*.ts\" --fix",
     "format": "prettier --write \"src/**/*.ts\"",
     "format:check": "prettier --check \"src/**/*.ts\"",
-    "migrate": "knex migrate:latest",
-    "migrate:rollback": "knex migrate:rollback",
+    "migrate": "node -r ts-node/register ./node_modules/knex/bin/cli.js migrate:latest",
+    "migrate:rollback": "node -r ts-node/register ./node_modules/knex/bin/cli.js migrate:rollback",
+    "fix:migration-names": "node scripts/fix-migration-names.js",
     "seed": "knex seed:run"
   },
   "repository": {
@@ -28,19 +29,20 @@
   },
   "homepage": "https://github.com/ahmed-shaon/hr-management-backend#readme",
   "dependencies": {
-    "express": "^5.2.1",
-    "pg": "^8.13.0",
-    "knex": "^3.1.0",
-    "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2",
     "bcryptjs": "^2.4.3",
-    "joi": "^17.13.3"
+    "dotenv": "^16.4.5",
+    "express": "^5.2.1",
+    "express-validator": "^7.3.1",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
+    "knex": "^3.1.0",
+    "pg": "^8.13.0"
   },
   "devDependencies": {
-    "@types/express": "^5.0.6",
-    "@types/node": "^25.2.0",
-    "@types/jsonwebtoken": "^9.0.7",
     "@types/bcryptjs": "^2.4.6",
+    "@types/express": "^5.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "@types/node": "^25.2.0",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
     "eslint": "^8.57.0",

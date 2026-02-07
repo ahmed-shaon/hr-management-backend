@@ -1,3 +1,4 @@
+/** Standard API response shape (statusCode, data, message, success). */
 export class ApiResponse<T = unknown> {
   readonly statusCode: number;
   readonly data: T | null;

@@ -1,4 +1,6 @@
-exports.up = function (knex) {
+import type { Knex } from 'knex';
+
+export async function up(knex: Knex): Promise<void> {
   return knex.schema.createTable('attendance', (table) => {
     table.bigIncrements('id').primary();
     table
@@ -13,8 +15,8 @@ exports.up = function (knex) {
     table.timestamp('created_at').defaultTo(knex.fn.now());
     table.unique(['employee_id', 'date']);
   });
-};
+}
 
-exports.down = function (knex) {
+export async function down(knex: Knex): Promise<void> {
   return knex.schema.dropTableIfExists('attendance');
-};
+}

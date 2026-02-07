@@ -1,10 +1,16 @@
 import { Router } from 'express';
 import * as hrController from '../controller/hr.controller';
+import { validateLogin, loginValidationRules } from '../middleware/validateLogin';
 
 const router = Router();
 
-//hr routes
-router.post('/auth/login', hrController.hrLogin);
+// hr routes
+router.post(
+  '/auth/login',
+  loginValidationRules,
+  validateLogin,
+  hrController.hrLogin
+);
 
 //employee routes
 

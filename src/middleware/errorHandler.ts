@@ -1,3 +1,5 @@
+// Global error handler. ApiError -> statusCode + JSON; other errors -> 500.
+
 import type { Request, Response, NextFunction } from 'express';
 import { ApiError } from '../utils/apiError';
 import { ApiResponse } from '../utils/apiResponse';

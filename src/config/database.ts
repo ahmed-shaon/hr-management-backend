@@ -1,3 +1,5 @@
+// Knex instance for PostgreSQL. Uses DB_URL from env.
+
 import knex, { type Knex } from 'knex';
 
 const connection =
