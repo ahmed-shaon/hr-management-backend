@@ -67,6 +67,23 @@ export interface EmployeeListQuery {
   limit?: number;
 }
 
+// --- Attendance (attendance table) ---
+export interface Attendance {
+  id: number;
+  employee_id: number;
+  date: Date;
+  check_in_time: Date;
+  created_at: Date;
+}
+
+export interface AttendanceListQuery {
+  employee_id?: number;
+  from?: string;
+  to?: string;
+  page?: number;
+  limit?: number;
+}
+
 export interface PaginatedResponse<T> {
   items: T[];
   total: number;

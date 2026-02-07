@@ -20,6 +20,15 @@ import {
   validateUpdateEmployee,
   updateEmployeeValidationRules,
 } from '../middleware/validateUpdateEmployee';
+import * as attendanceController from '../controller/attendence.controller';
+import {
+  validateListAttendance,
+  listAttendanceValidationRules,
+} from '../middleware/validateListAttendance';
+import {
+  validateAttendanceId,
+  attendanceIdValidationRules,
+} from '../middleware/validateAttendanceId';
 
 const router = Router();
 
@@ -73,7 +82,20 @@ router.delete(
 );
 
 // attendance routes
-
+router.get(
+  '/attendance',
+  authJwt,
+  listAttendanceValidationRules,
+  validateListAttendance,
+  attendanceController.list
+);
+router.get(
+  '/attendance/:id',
+  authJwt,
+  attendanceIdValidationRules,
+  validateAttendanceId,
+  attendanceController.getById
+);
 
 //report routes
 
