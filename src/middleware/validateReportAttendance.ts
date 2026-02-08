@@ -11,11 +11,11 @@ export const reportAttendanceValidationRules = [
     .notEmpty()
     .withMessage('month is required')
     .matches(/^\d{4}-\d{2}$/)
-    .withMessage('month must be YYYY-MM')
+    .withMessage('Invalid month. Valid format: YYYY-MM (e.g. 2025-08)')
     .custom((value) => {
       const [, m] = value.split('-').map(Number);
       if (m < 1 || m > 12) {
-        throw new Error('month must be between 01 and 12');
+        throw new Error('month must be between 01 and 12. Valid format: YYYY-MM (e.g. 2025-08)');
       }
       return true;
     }),

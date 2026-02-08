@@ -7,14 +7,20 @@ import { ApiError } from '../utils/apiError';
 
 export const listAttendanceValidationRules = [
   query('employee_id').optional().isInt({ min: 1 }).toInt().withMessage('Invalid employee_id'),
-  query('from').optional().isISO8601().withMessage('Invalid from date'),
-  query('to').optional().isISO8601().withMessage('Invalid to date'),
+  query('from')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid from date. Valid format: YYYY-MM-DD (e.g. 2025-01-15)'),
+  query('to')
+    .optional()
+    .isISO8601()
+    .withMessage('Invalid to date. Valid format: YYYY-MM-DD (e.g. 2025-01-15)'),
   query('page').optional().isInt({ min: 1 }).toInt(),
   query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
   query('to').optional().custom((value, { req }) => {
     const from = req.query?.from as string | undefined;
     if (from && value && value < from) {
-      throw new Error('to must be on or after from');
+      throw new Error('to must be on or after from. Valid format: YYYY-MM-DD (e.g. 2025-01-15)');
     }
     return true;
   }),

@@ -15,13 +15,13 @@ export const createAttendanceValidationRules = [
     .notEmpty()
     .withMessage('date is required')
     .isISO8601()
-    .withMessage('Invalid date'),
+    .withMessage('Invalid date. Valid format: YYYY-MM-DD (e.g. 2025-01-15)'),
   body('check_in_time')
     .trim()
     .notEmpty()
     .withMessage('check_in_time is required')
     .isISO8601()
-    .withMessage('Invalid check_in_time'),
+    .withMessage('Invalid check_in_time. Valid format: ISO 8601 date or datetime (e.g. YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)'),
 ];
 
 export const validateCreateAttendance = (

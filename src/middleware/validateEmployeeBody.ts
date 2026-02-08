@@ -17,13 +17,13 @@ export const employeeBodyValidationRules = [
     .notEmpty()
     .withMessage('Hiring date is required')
     .isISO8601()
-    .withMessage('Invalid hiring date'),
+    .withMessage('Invalid hiring date. Valid format: YYYY-MM-DD (e.g. 2025-01-15)'),
   body('date_of_birth')
     .trim()
     .notEmpty()
     .withMessage('Date of birth is required')
     .isISO8601()
-    .withMessage('Invalid date of birth'),
+    .withMessage('Invalid date of birth. Valid format: YYYY-MM-DD (e.g. 2025-01-15)'),
   body('salary')
     .trim()
     .notEmpty()
