@@ -7,10 +7,7 @@ import { sign as signJwt } from '../utils/jwt';
 
 export const authService = {
   /** Validates credentials; returns { token, user } or null (same for invalid email or password). */
-  async login(
-    email: string,
-    password: string
-  ): Promise<LoginSuccessResponse | null> {
+  async login(email: string, password: string): Promise<LoginSuccessResponse | null> {
     const row = await hrUserModel.findByEmail(email);
 
     if (!row) {

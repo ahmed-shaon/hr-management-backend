@@ -11,11 +11,7 @@ export const listEmployeesValidationRules = [
   query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
 ];
 
-export const validateListEmployees = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const validateListEmployees = (req: Request, _res: Response, next: NextFunction): void => {
   const result = validationResult(req);
 
   if (result.isEmpty()) {

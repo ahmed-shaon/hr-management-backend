@@ -17,20 +17,18 @@ export const listAttendanceValidationRules = [
     .withMessage('Invalid to date. Valid format: YYYY-MM-DD (e.g. 2025-01-15)'),
   query('page').optional().isInt({ min: 1 }).toInt(),
   query('limit').optional().isInt({ min: 1, max: 100 }).toInt(),
-  query('to').optional().custom((value, { req }) => {
-    const from = req.query?.from as string | undefined;
-    if (from && value && value < from) {
-      throw new Error('to must be on or after from. Valid format: YYYY-MM-DD (e.g. 2025-01-15)');
-    }
-    return true;
-  }),
+  query('to')
+    .optional()
+    .custom((value, { req }) => {
+      const from = req.query?.from as string | undefined;
+      if (from && value && value < from) {
+        throw new Error('to must be on or after from. Valid format: YYYY-MM-DD (e.g. 2025-01-15)');
+      }
+      return true;
+    }),
 ];
 
-export const validateListAttendance = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const validateListAttendance = (req: Request, _res: Response, next: NextFunction): void => {
   const result = validationResult(req);
 
   if (result.isEmpty()) {

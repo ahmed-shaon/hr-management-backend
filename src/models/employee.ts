@@ -28,17 +28,18 @@ export const employeeModel = {
         .offset((page - 1) * limit)
         .select('*')
         .then((r) => r as Employee[]),
-      baseQuery.clone().count('* as total').first().then((r) => Number((r as { total: string }).total)),
+      baseQuery
+        .clone()
+        .count('* as total')
+        .first()
+        .then((r) => Number((r as { total: string }).total)),
     ]);
 
     return { rows, total: countResult };
   },
   /** Get one employee by id. Excludes soft-deleted. */
   async findById(id: number): Promise<Employee | undefined> {
-    const row = await db('employees')
-      .where({ id })
-      .whereNull('deleted_at')
-      .first();
+    const row = await db('employees').where({ id }).whereNull('deleted_at').first();
     return row as Employee | undefined;
   },
   /** Create employee. Returns created row. */

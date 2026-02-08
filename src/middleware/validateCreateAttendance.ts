@@ -21,7 +21,9 @@ export const createAttendanceValidationRules = [
     .notEmpty()
     .withMessage('check_in_time is required')
     .isISO8601()
-    .withMessage('Invalid check_in_time. Valid format: ISO 8601 date or datetime (e.g. YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)'),
+    .withMessage(
+      'Invalid check_in_time. Valid format: ISO 8601 date or datetime (e.g. YYYY-MM-DD or YYYY-MM-DDTHH:mm:ss.sssZ)'
+    ),
 ];
 
 export const validateCreateAttendance = (

@@ -9,11 +9,7 @@ export const attendanceIdValidationRules = [
   param('id').isInt({ min: 1 }).toInt().withMessage('Invalid attendance id'),
 ];
 
-export const validateAttendanceId = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const validateAttendanceId = (req: Request, _res: Response, next: NextFunction): void => {
   const result = validationResult(req);
 
   if (result.isEmpty()) {

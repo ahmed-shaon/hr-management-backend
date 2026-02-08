@@ -8,21 +8,17 @@ export const errorHandler = (
   err: unknown,
   _req: Request,
   res: Response,
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars -- Express error handler signature
   _next: NextFunction
 ): void => {
   if (err instanceof ApiError) {
-    const response = new ApiResponse(
-      err.statusCode,
-      { errors: err.errors },
-      err.message
-    );
+    const response = new ApiResponse(err.statusCode, { errors: err.errors }, err.message);
     res.status(response.statusCode).json(response);
     return;
   }
 
   // Unknown error: treat as 500
-  const message =
-    err instanceof Error ? err.message : 'Something went wrong';
+  const message = err instanceof Error ? err.message : 'Something went wrong';
   // eslint-disable-next-line no-console -- log unexpected errors
   console.error('Unhandled error:', err);
 

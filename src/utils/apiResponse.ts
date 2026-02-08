@@ -5,11 +5,7 @@ export class ApiResponse<T = unknown> {
   readonly message: string;
   readonly success: boolean;
 
-  constructor(
-    statusCode: number,
-    data: T | null,
-    message = 'Success'
-  ) {
+  constructor(statusCode: number, data: T | null, message = 'Success') {
     this.statusCode = statusCode;
     this.data = data;
     this.message = message;

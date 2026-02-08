@@ -73,14 +73,17 @@ Server runs at `http://localhost:<PORT>` (default `http://localhost:3000`).
 
 ```bash
 npm run build
-node dist/server.js
+npm run start:prod
 ```
+
+(`start:prod` runs `node dist/src/server.js`.)
 
 ## Scripts
 
 | Command            | Description                    |
 | ------------------ | ------------------------------ |
 | `npm start`        | Start dev server (ts-node)      |
+| `npm run start:prod` | Start server from `dist/` (after build) |
 | `npm run build`    | Compile TypeScript to `dist/`   |
 | `npm run migrate` | Run database migrations        |
 | `npm run migrate:rollback` | Rollback last migration |

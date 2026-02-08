@@ -5,13 +5,11 @@ import { param, validationResult, type ValidationError } from 'express-validator
 import type { ApiErrorDetail } from '../type';
 import { ApiError } from '../utils/apiError';
 
-export const employeeIdValidationRules = [param('id').isInt({ min: 1 }).toInt().withMessage('Invalid employee id')];
+export const employeeIdValidationRules = [
+  param('id').isInt({ min: 1 }).toInt().withMessage('Invalid employee id'),
+];
 
-export const validateEmployeeId = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const validateEmployeeId = (req: Request, _res: Response, next: NextFunction): void => {
   const result = validationResult(req);
 
   if (result.isEmpty()) {

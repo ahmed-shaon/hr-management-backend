@@ -7,10 +7,7 @@ import {
   validateListEmployees,
   listEmployeesValidationRules,
 } from '../middleware/validateListEmployees';
-import {
-  validateEmployeeId,
-  employeeIdValidationRules,
-} from '../middleware/validateEmployeeId';
+import { validateEmployeeId, employeeIdValidationRules } from '../middleware/validateEmployeeId';
 import { uploadEmployeePhoto } from '../middleware/uploadEmployeePhoto';
 import {
   validateCreateEmployee,
@@ -42,12 +39,7 @@ import {
 const router = Router();
 
 // hr routes
-router.post(
-  '/auth/login',
-  loginValidationRules,
-  validateLogin,
-  hrController.hrLogin
-);
+router.post('/auth/login', loginValidationRules, validateLogin, hrController.hrLogin);
 
 // employee routes (JWT required, HR must exist in DB)
 router.get(

@@ -121,11 +121,9 @@ export interface MulterUploadFile {
 }
 
 // --- Express Request with HR user and optional file ---
-declare global {
-  namespace Express {
-    interface Request {
-      hrUser?: { id: number; email: string };
-      file?: MulterUploadFile;
-    }
+declare module 'express-serve-static-core' {
+  interface Request {
+    hrUser?: { id: number; email: string };
+    file?: MulterUploadFile;
   }
 }

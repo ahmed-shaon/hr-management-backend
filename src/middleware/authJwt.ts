@@ -7,11 +7,7 @@ import { hrUserModel } from '../models/hrUser';
 
 const BEARER_PREFIX = 'Bearer ';
 
-export const authJwt = async (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): Promise<void> => {
+export const authJwt = async (req: Request, _res: Response, next: NextFunction): Promise<void> => {
   const authHeader = req.headers.authorization;
 
   if (!authHeader || !authHeader.startsWith(BEARER_PREFIX)) {

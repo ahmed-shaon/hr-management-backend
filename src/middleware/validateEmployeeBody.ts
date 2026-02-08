@@ -7,10 +7,7 @@ import { ApiError } from '../utils/apiError';
 
 export const employeeBodyValidationRules = [
   body('name').trim().notEmpty().withMessage('Name is required'),
-  body('age')
-    .isInt({ min: 18, max: 120 })
-    .toInt()
-    .withMessage('Age must be between 18 and 120'),
+  body('age').isInt({ min: 18, max: 120 }).toInt().withMessage('Age must be between 18 and 120'),
   body('designation').trim().notEmpty().withMessage('Designation is required'),
   body('hiring_date')
     .trim()
@@ -33,11 +30,7 @@ export const employeeBodyValidationRules = [
     .toFloat(),
 ];
 
-export const validateEmployeeBody = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const validateEmployeeBody = (req: Request, _res: Response, next: NextFunction): void => {
   const result = validationResult(req);
 
   if (result.isEmpty()) {

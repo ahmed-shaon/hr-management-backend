@@ -9,5 +9,4 @@ const EXPIRES_IN = '24h';
 export const sign = (payload: JwtPayload): string =>
   jwt.sign(payload, SECRET, { expiresIn: EXPIRES_IN });
 
-export const verify = (token: string): JwtPayload =>
-  jwt.verify(token, SECRET) as JwtPayload;
+export const verify = (token: string): JwtPayload => jwt.verify(token, SECRET) as JwtPayload;

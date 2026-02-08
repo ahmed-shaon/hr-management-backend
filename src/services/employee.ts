@@ -36,7 +36,14 @@ export const employeeService = {
   },
   /** Create employee. Photo from multipart file only; no URL. */
   async createEmployee(
-    body: { name: string; age: number; designation: string; hiring_date: string; date_of_birth: string; salary: number },
+    body: {
+      name: string;
+      age: number;
+      designation: string;
+      hiring_date: string;
+      date_of_birth: string;
+      salary: number;
+    },
     file?: MulterUploadFile
   ): Promise<Employee> {
     const photo_path = file ? `uploads/employees/${file.filename}` : null;

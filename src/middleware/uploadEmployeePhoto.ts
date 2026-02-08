@@ -28,11 +28,7 @@ const upload = multer({
 }).single('photo');
 
 /** Middleware: parse multipart form-data, optional single file field "photo". */
-export const uploadEmployeePhoto = (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void => {
+export const uploadEmployeePhoto = (req: Request, res: Response, next: NextFunction): void => {
   upload(req, res, (err: unknown) => {
     if (err instanceof multer.MulterError) {
       if (err.code === 'LIMIT_FILE_SIZE') {

@@ -3,8 +3,7 @@
 import knex, { type Knex } from 'knex';
 
 const connection =
-  process.env.DB_URL ||
-  'postgresql://postgres:postgres@localhost:5432/hr-management-system';
+  process.env.DB_URL || 'postgresql://postgres:postgres@localhost:5432/hr-management-system';
 
 const config: Knex.Config = {
   client: 'pg',

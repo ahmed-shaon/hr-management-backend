@@ -20,11 +20,7 @@ export const loginValidationRules = [
     .withMessage('Password is required'),
 ];
 
-export const validateLogin = (
-  req: Request,
-  _res: Response,
-  next: NextFunction
-): void => {
+export const validateLogin = (req: Request, _res: Response, next: NextFunction): void => {
   const result = validationResult(req);
 
   if (result.isEmpty()) {

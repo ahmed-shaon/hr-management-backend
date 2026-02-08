@@ -36,7 +36,11 @@ export const attendanceModel = {
         .offset((page - 1) * limit)
         .select('*')
         .then((r) => r as Attendance[]),
-      baseQuery.clone().count('* as total').first().then((r) => Number((r as { total: string }).total)),
+      baseQuery
+        .clone()
+        .count('* as total')
+        .first()
+        .then((r) => Number((r as { total: string }).total)),
     ]);
 
     return { rows, total: countResult };
