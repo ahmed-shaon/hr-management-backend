@@ -2,5 +2,9 @@ node_modules/
 dist/
 build/
 coverage/
+.cursor/
+.env
+.env.*
+uploads/
 *.min.js
 package-lock.json

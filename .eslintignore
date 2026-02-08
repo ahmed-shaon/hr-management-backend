@@ -1,8 +1,10 @@
 node_modules/
 dist/
 build/
+coverage/
+.cursor/
 .env
 .env.local
 .env.*
-coverage/
 *.min.js
+uploads/
