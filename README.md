@@ -55,7 +55,9 @@ npm run seed
 
 - `npm run seed:hr_user` – HR users only (e.g. admin@example.com / admin123)
 - `npm run seed:employees` – Employees only
-- `npm run seed:attendance` – Attendance only (requires employees to exist)
+- `npm run seed:attendance` – Attendance only
+
+**Note:** The attendance seed references specific `employee_id` values. If those employees do not exist in the `employees` table, the attendance seed will fail with a foreign key error. Run the employees seed first, or run `npm run seed` to run all seeds in order.
 
 ## Running the project
 
@@ -91,32 +93,288 @@ node dist/server.js
 | `npm run format`   | Format code with Prettier       |
 | `npm run format:check` | Check formatting            |
 
-## API overview
+## API reference
+
+All successful responses use this shape:
+
+```json
+{
+  "statusCode": 200,
+  "data": { ... },
+  "message": "Success",
+  "success": true
+}
+```
+
+Validation or client errors (4xx) return:
+
+```json
+{
+  "statusCode": 400,
+  "data": { "errors": [ { "field": "name", "message": "Name is required" } ] },
+  "message": "Validation failed",
+  "success": false
+}
+```
+
+Protected routes require header: `Authorization: Bearer <token>` (from login).
+
+---
 
 ### Authentication
 
-- **POST /auth/login** – Login with email and password. Returns JWT. Use the token in the `Authorization: Bearer <token>` header for protected routes.
+#### POST /auth/login
 
-### Employees (all require JWT)
+Login with email and password. Returns a JWT for protected routes.
 
-- **GET /employees** – List employees (pagination, optional `search` by name).
-- **POST /employees** – Create employee (optional photo via `multipart/form-data`, field `photo`).
-- **GET /employees/:id** – Get one employee.
-- **PUT /employees/:id** – Update employee (full body; optional photo).
-- **DELETE /employees/:id** – Soft-delete employee.
+**Request**
 
-### Attendance (all require JWT)
+- **Content-Type:** `application/json`
+- **Body:**
 
-- **GET /attendance** – List attendance (optional `employee_id`, `from`, `to`, pagination).
-- **POST /attendance** – Create or upsert attendance (body: `employee_id`, `date`, `check_in_time`).
-- **GET /attendance/:id** – Get one attendance entry.
-- **DELETE /attendance/:id** – Delete attendance entry.
+| Field     | Type   | Required | Description |
+| --------- | ------ | -------- | ----------- |
+| `email`   | string | Yes      | Valid email  |
+| `password`| string | Yes      | Password     |
 
-### Reports (require JWT)
+**Example request body:**
 
-- **GET /reports/attendance** – Monthly attendance summary. Query: `month=YYYY-MM` (required), optional `employee_id`. Response: per-employee `days_present` and `times_late` (late = check-in after 09:45).
+```json
+{
+  "email": "admin@example.com",
+  "password": "admin123"
+}
+```
 
-For pagination and filter details, see [docs/API_PAGINATION_AND_FILTERS.md](docs/API_PAGINATION_AND_FILTERS.md).
+**Response**
+
+- **200** – Success. `data` contains:
+  - `token` (string) – JWT to send in `Authorization: Bearer <token>`
+  - `user` – `{ id, email, name }`
+- **400** – Validation failed or invalid credentials. `data.errors` has field-level messages.
+
+---
+
+### Employees
+
+All employee routes require JWT.
+
+#### GET /employees
+
+List employees with optional search and pagination.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Query:**
+
+| Query   | Type   | Required | Description                                |
+| ------- | ------ | -------- | ------------------------------------------ |
+| `search`| string | No       | Filter by name (partial, case-insensitive) |
+| `page`  | number | No       | Page number (default 1)                     |
+| `limit` | number | No       | Items per page (default 10, max 100)       |
+
+**Response**
+
+- **200** – Success. `data` is a paginated list:
+  - `items` – Array of employee objects (`id`, `name`, `age`, `designation`, `hiring_date`, `date_of_birth`, `salary`, `photo_path`, `created_at`, `updated_at`, `deleted_at`)
+  - `total` – Total count of matching employees
+  - `page`, `limit` – Current page and limit
+
+#### POST /employees
+
+Create an employee. Optional photo upload.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Content-Type:** `multipart/form-data` (if including photo) or `application/json` (no photo)
+- **Body (form fields or JSON):**
+
+| Field           | Type   | Required | Description / format                    |
+| --------------- | ------ | -------- | -------------------------------------- |
+| `name`          | string | Yes      | Non-empty                               |
+| `age`           | number | Yes      | Integer 18–120                          |
+| `designation`   | string | Yes      | Non-empty                               |
+| `hiring_date`   | string | Yes      | Date YYYY-MM-DD                         |
+| `date_of_birth` | string | Yes      | Date YYYY-MM-DD                         |
+| `salary`        | string | Yes      | Non-empty, numeric, ≥ 0                 |
+| `photo`         | file   | No       | Image file (max 5MB); form field name `photo` |
+
+**Response**
+
+- **201** – Created. `data` is the created employee object.
+- **400** – Validation failed. `data.errors` lists field errors.
+
+#### GET /employees/:id
+
+Get a single employee by ID.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Params:** `id` – integer, employee ID
+
+**Response**
+
+- **200** – Success. `data` is the employee object.
+- **400** – Invalid `id` (e.g. not an integer).
+- **404** – Employee not found or soft-deleted.
+
+#### PUT /employees/:id
+
+Update an employee (full replace). All body fields required; optional new photo.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Content-Type:** `multipart/form-data` or `application/json`
+- **Params:** `id` – integer, employee ID
+- **Body:** Same fields as POST /employees (all required). Optional `photo` file to replace existing.
+
+**Response**
+
+- **200** – Success. `data` is the updated employee object.
+- **400** – Validation failed.
+- **404** – Employee not found.
+
+#### DELETE /employees/:id
+
+Soft-delete an employee.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Params:** `id` – integer, employee ID
+
+**Response**
+
+- **204** – No content (success).
+- **400** – Invalid `id`.
+- **404** – Employee not found or already deleted.
+
+---
+
+### Attendance
+
+All attendance routes require JWT.
+
+#### GET /attendance
+
+List attendance entries with optional filters and pagination.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Query:**
+
+| Query        | Type   | Required | Description / format     |
+| ------------ | ------ | -------- | ----------------------- |
+| `employee_id`| number | No       | Filter by employee ID   |
+| `from`       | string | No       | Start date YYYY-MM-DD   |
+| `to`         | string | No       | End date YYYY-MM-DD; must be ≥ `from` |
+| `page`       | number | No       | Page (default 1)       |
+| `limit`      | number | No       | Per page (default 10, max 100) |
+
+**Response**
+
+- **200** – Success. `data` has `items` (array of attendance: `id`, `employee_id`, `date`, `check_in_time`, `created_at`), `total`, `page`, `limit`.
+- **400** – Validation failed (e.g. invalid date format or `to` < `from`).
+
+#### POST /attendance
+
+Create or upsert attendance. If a row exists for the same `employee_id` and `date`, only `check_in_time` is updated.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Content-Type:** `application/json`
+- **Body:**
+
+| Field          | Type   | Required | Description / format        |
+| -------------- | ------ | -------- | -------------------------- |
+| `employee_id`  | number | Yes      | Positive integer (must exist in employees) |
+| `date`         | string | Yes      | Date YYYY-MM-DD             |
+| `check_in_time`| string | Yes      | ISO 8601 date or datetime  |
+
+**Example:**
+
+```json
+{
+  "employee_id": 1,
+  "date": "2025-01-15",
+  "check_in_time": "2025-01-15T09:30:00.000Z"
+}
+```
+
+**Response**
+
+- **201** – Success. `data` is the created or updated attendance row.
+- **400** – Validation failed.
+
+#### GET /attendance/:id
+
+Get a single attendance entry.
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Params:** `id` – integer, attendance ID
+
+**Response**
+
+- **200** – Success. `data` is the attendance object.
+- **400** – Invalid `id`.
+- **404** – Attendance not found.
+
+#### DELETE /attendance/:id
+
+Delete an attendance entry (hard delete).
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Params:** `id` – integer, attendance ID
+
+**Response**
+
+- **204** – No content (success).
+- **400** – Invalid `id`.
+- **404** – Attendance not found.
+
+---
+
+### Reports
+
+#### GET /reports/attendance
+
+Monthly attendance summary per employee: days present and times late (check-in after 09:45 counts as late).
+
+**Request**
+
+- **Headers:** `Authorization: Bearer <token>`
+- **Query:**
+
+| Query        | Type   | Required | Description / format   |
+| ------------ | ------ | -------- | --------------------- |
+| `month`      | string | Yes      | Month YYYY-MM (e.g. 2025-08) |
+| `employee_id`| number | No       | Limit to one employee |
+
+**Response**
+
+- **200** – Success. `data` is an array of:
+  - `employee_id` (number)
+  - `name` (string)
+  - `days_present` (number)
+  - `times_late` (number)
+- **400** – Validation failed (e.g. invalid or missing `month`).
+- **404** – Only when `employee_id` is provided and that employee does not exist.
+
+**Example:** `GET /reports/attendance?month=2025-01` or `GET /reports/attendance?month=2025-01&employee_id=3`
+
+---
+
+For more on pagination and filters, see [docs/API_PAGINATION_AND_FILTERS.md](docs/API_PAGINATION_AND_FILTERS.md).
 
 ## Tech stack
 

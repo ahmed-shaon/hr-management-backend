@@ -20,7 +20,7 @@ import {
   validateUpdateEmployee,
   updateEmployeeValidationRules,
 } from '../middleware/validateUpdateEmployee';
-import * as attendanceController from '../controller/attendence.controller';
+import * as attendanceController from '../controller/attendance.controller';
 import {
   validateListAttendance,
   listAttendanceValidationRules,
